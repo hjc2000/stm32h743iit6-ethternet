@@ -30,16 +30,6 @@ namespace bsp
         /// @return
         std::string Name() const override;
 
-        /// @brief 获取本控制器当前使用的接口类型。
-        /// @note 要打开本控制器后本属性才有效。
-        /// @return
-        bsp::Ethernet_InterfaceType InterfaceType() const override;
-
-        /// @brief 获取本控制器绑定的 PHY 地址。
-        /// @note 要打开本控制器后本属性才有效。
-        /// @return
-        uint32_t PhyAddress() const override;
-
         /// @brief 获取本控制器绑定的 MAC 地址。
         /// @note 要打开本控制器后本属性才有效。
         /// @return

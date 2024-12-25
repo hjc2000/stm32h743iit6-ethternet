@@ -164,16 +164,6 @@ std::string bsp::EthernetController::Name() const
     return "eth";
 }
 
-bsp::Ethernet_InterfaceType bsp::EthernetController::InterfaceType() const
-{
-    return _interface_type;
-}
-
-uint32_t bsp::EthernetController::PhyAddress() const
-{
-    return _phy_address;
-}
-
 base::Mac bsp::EthernetController::Mac() const
 {
     return _mac;
