@@ -23,6 +23,10 @@ namespace bsp
         base::List<base::ReadOnlySpan> _received_span_list{};
         std::shared_ptr<bsp::IBinarySemaphore> _receiving_completion_signal = DICreate_BinarySemaphore();
 
+        /// @brief 接收。
+        /// @return
+        base::IEnumerable<base::ReadOnlySpan> const &ReceiveMultiSpans();
+
     public:
         static_function EthernetController &Instance();
 
@@ -62,10 +66,6 @@ namespace bsp
         /// @brief 发送。
         /// @param spans
         void Send(base::IEnumerable<base::ReadOnlySpan> const &spans) override;
-
-        /// @brief 接收。
-        /// @return
-        base::IEnumerable<base::ReadOnlySpan> const &ReceiveMultiSpans();
 
         /// @brief 接收。
         /// @note 因为接收后需要解析，而解析需要数据完整且连续，所以必须接收一整个完整的以太网帧，
