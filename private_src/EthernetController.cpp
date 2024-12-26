@@ -313,7 +313,7 @@ void bsp::EthernetController::Send(base::IEnumerable<base::ReadOnlySpan> const &
     }
 }
 
-base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::Receive()
+base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::ReceiveMultiSpans()
 {
     while (true)
     {
@@ -364,5 +364,66 @@ base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::Receive()
         {
             return _received_span_list;
         }
+    }
+}
+
+base::ReadOnlySpan bsp::EthernetController::Receive()
+{
+    while (true)
+    {
+        _received_span_list.Clear();
+
+        ETH_BufferTypeDef rx_buffers[ETH_RX_DESC_CNT]{};
+        for (uint32_t i = 0; i < ETH_RX_DESC_CNT - 1; i++)
+        {
+            rx_buffers[i].next = &rx_buffers[i + 1];
+        }
+
+        if (!HAL_ETH_IsRxDataAvailable(&_handle))
+        {
+            // 无数据可接收，等待信号量。有数据到来会触发中断，中断服务函数会释放信号量。
+            _receiving_completion_signal->Acquire();
+        }
+
+        if (HAL_ETH_GetRxDataBuffer(&_handle, rx_buffers) != HAL_OK)
+        {
+            DI_Console().WriteLine("HAL_ETH_GetRxDataBuffer 接收数据发生错误。");
+            continue;
+        }
+
+        HAL_ETH_BuildRxDescriptors(&_handle);
+
+        for (ETH_BufferTypeDef buffer : rx_buffers)
+        {
+            if (buffer.buffer == nullptr)
+            {
+                break;
+            }
+
+            if (buffer.len == 0)
+            {
+                break;
+            }
+
+            DI_InvalidateDCache(buffer.buffer, buffer.len);
+            base::ReadOnlySpan span{buffer.buffer, static_cast<int32_t>(buffer.len)};
+            _received_span_list.Add(span);
+            if (buffer.next == nullptr)
+            {
+                break;
+            }
+        }
+
+        if (_received_span_list.Count() > 1)
+        {
+            DI_Console().WriteLine("接收到的以太网帧使用了超过 1 个 DMA 描述符。");
+        }
+
+        if (_received_span_list.Count() == 0)
+        {
+            continue;
+        }
+
+        return _received_span_list[0];
     }
 }
