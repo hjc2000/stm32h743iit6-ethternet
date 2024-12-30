@@ -351,7 +351,6 @@ void bsp::EthernetController::Send(base::IEnumerable<base::ReadOnlySpan> const &
         ETH_BufferTypeDef eth_buffer{};
         eth_buffer.buffer = const_cast<uint8_t *>(span.Buffer());
         eth_buffer.len = span.Size();
-        eth_buffer.next = nullptr;
 
         _eth_buffers.Add(eth_buffer);
         if (_eth_buffers.Count() > 1)
