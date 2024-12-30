@@ -370,7 +370,7 @@ void bsp::EthernetController::Send(base::IEnumerable<base::ReadOnlySpan> const &
 void bsp::EthernetController::Send(base::ReadOnlySpan const &span)
 {
     _send_completion_signal->Acquire();
-    _sending_config.Length += span.Size();
+    _sending_config.Length = span.Size();
 
     ETH_BufferTypeDef eth_buffer{};
     eth_buffer.buffer = const_cast<uint8_t *>(span.Buffer());
