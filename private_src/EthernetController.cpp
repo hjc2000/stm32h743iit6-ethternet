@@ -314,28 +314,40 @@ void bsp::EthernetController::WritePHYRegister(uint32_t register_index, uint32_t
 
 void bsp::EthernetController::Start(bsp::Ethernet_DuplexMode duplex_mode, base::Bps const &speed)
 {
-    ETH_MACConfigTypeDef def{};
-    HAL_ETH_GetMACConfig(&_handle, &def);
+    {
+        ETH_MACConfigTypeDef def{};
+        HAL_ETH_GetMACConfig(&_handle, &def);
 
-    if (speed == base::Mbps{10})
-    {
-        def.Speed = ETH_SPEED_10M;
-    }
-    else
-    {
-        def.Speed = ETH_SPEED_100M;
+        if (speed == base::Mbps{10})
+        {
+            def.Speed = ETH_SPEED_10M;
+        }
+        else
+        {
+            def.Speed = ETH_SPEED_100M;
+        }
+
+        if (duplex_mode == bsp::Ethernet_DuplexMode::HalfDuplex)
+        {
+            def.DuplexMode = ETH_HALFDUPLEX_MODE;
+        }
+        else
+        {
+            def.DuplexMode = ETH_FULLDUPLEX_MODE;
+        }
+
+        HAL_ETH_SetMACConfig(&_handle, &def);
     }
 
-    if (duplex_mode == bsp::Ethernet_DuplexMode::HalfDuplex)
+    // 设置过滤规则
     {
-        def.DuplexMode = ETH_HALFDUPLEX_MODE;
-    }
-    else
-    {
-        def.DuplexMode = ETH_FULLDUPLEX_MODE;
+        ETH_MACFilterConfigTypeDef def{};
+        HAL_ETH_GetMACFilterConfig(&_handle, &def);
+        def.PromiscuousMode = FunctionalState::ENABLE;
+        // def.PassAllMulticast = FunctionalState::ENABLE;
+        HAL_ETH_SetMACFilterConfig(&_handle, &def);
     }
 
-    HAL_ETH_SetMACConfig(&_handle, &def);
     HAL_ETH_Start_IT(&_handle);
 }
 
