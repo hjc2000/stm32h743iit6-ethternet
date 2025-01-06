@@ -223,7 +223,7 @@ base::Mac bsp::EthernetController::Mac() const
     return _mac;
 }
 
-void bsp::EthernetController::Open(bsp::Ethernet_InterfaceType interface_type,
+void bsp::EthernetController::Open(bsp::EthernetInterfaceType interface_type,
                                    uint32_t phy_address,
                                    base::Mac const &mac)
 {
@@ -312,7 +312,7 @@ void bsp::EthernetController::WritePHYRegister(uint32_t register_index, uint32_t
     }
 }
 
-void bsp::EthernetController::Start(bsp::Ethernet_DuplexMode duplex_mode, base::Bps const &speed)
+void bsp::EthernetController::Start(bsp::EthernetDuplexMode duplex_mode, base::Bps const &speed)
 {
     {
         ETH_MACConfigTypeDef def{};
@@ -327,7 +327,7 @@ void bsp::EthernetController::Start(bsp::Ethernet_DuplexMode duplex_mode, base::
             def.Speed = ETH_SPEED_100M;
         }
 
-        if (duplex_mode == bsp::Ethernet_DuplexMode::HalfDuplex)
+        if (duplex_mode == bsp::EthernetDuplexMode::HalfDuplex)
         {
             def.DuplexMode = ETH_HALFDUPLEX_MODE;
         }
