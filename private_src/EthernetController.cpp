@@ -1,12 +1,12 @@
 #include "EthernetController.h"
 #include <base/container/Dictionary.h>
-#include <base/di/SingletonGetter.h>
 #include <bsp-interface/di/cache.h>
 #include <bsp-interface/di/console.h>
 #include <bsp-interface/di/delayer.h>
 #include <bsp-interface/di/ethernet.h>
 #include <bsp-interface/di/expanded_io.h>
 #include <bsp-interface/di/interrupt.h>
+#include <bsp-interface/TaskSingletonGetter.h>
 #include <hal.h>
 #include <vector>
 
@@ -190,22 +190,12 @@ base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::ReceiveMul
 bsp::EthernetController &bsp::EthernetController::Instance()
 {
     class Getter :
-        public base::SingletonGetter<EthernetController>
+        public bsp::TaskSingletonGetter<EthernetController>
     {
     public:
         std::unique_ptr<EthernetController> Create() override
         {
             return std::unique_ptr<EthernetController>{new EthernetController{}};
-        }
-
-        void Lock() override
-        {
-            DI_DisableGlobalInterrupt();
-        }
-
-        void Unlock() override
-        {
-            DI_EnableGlobalInterrupt();
         }
     };
 
