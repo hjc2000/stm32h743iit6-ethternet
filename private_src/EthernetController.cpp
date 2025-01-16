@@ -171,7 +171,7 @@ base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::ReceiveMul
                 break;
             }
 
-            DI_InvalidateDCache(buffer.buffer, buffer.len);
+            bsp::di::cache::InvalidateDCache(buffer.buffer, buffer.len);
             base::ReadOnlySpan span{buffer.buffer, static_cast<int32_t>(buffer.len)};
             _received_span_list.Add(span);
             if (buffer.next == nullptr)
@@ -419,7 +419,7 @@ base::ReadOnlySpan bsp::EthernetController::Receive()
                 break;
             }
 
-            DI_InvalidateDCache(buffer.buffer, buffer.len);
+            bsp::di::cache::InvalidateDCache(buffer.buffer, buffer.len);
             base::ReadOnlySpan span{buffer.buffer, static_cast<int32_t>(buffer.len)};
             _received_span_list.Add(span);
             if (buffer.next == nullptr)
