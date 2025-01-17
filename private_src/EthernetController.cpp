@@ -265,12 +265,13 @@ void bsp::EthernetController::Open(bsp::EthernetInterfaceType interface_type,
     /* 这里的中断优先级必须设置在 freertos 能够屏蔽的优先级范围内，不然不知道什么原因，
      * 会导致 freertos 的 queue.c 中报错。
      */
-    DI_EnableInterrupt(static_cast<uint32_t>(ETH_IRQn), 7);
-    DI_IsrManager().AddIsr(static_cast<uint32_t>(ETH_IRQn),
-                           [&]()
-                           {
-                               HAL_ETH_IRQHandler(&_handle);
-                           });
+    bsp::di::interrupt::EnableInterrupt(static_cast<uint32_t>(ETH_IRQn), 7);
+
+    bsp::di::interrupt::IsrManager().AddIsr(static_cast<uint32_t>(ETH_IRQn),
+                                            [&]()
+                                            {
+                                                HAL_ETH_IRQHandler(&_handle);
+                                            });
 }
 
 uint32_t bsp::EthernetController::ReadPHYRegister(uint32_t register_index)
