@@ -3,7 +3,7 @@
 
 /// @brief 以太网控制器。
 /// @return
-bsp::IEthernetController &DI_EthernetController()
+bsp::IEthernetController &bsp::di::ethernet::EthernetController()
 {
     return bsp::EthernetController::Instance();
 }
