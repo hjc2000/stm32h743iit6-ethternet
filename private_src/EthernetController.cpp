@@ -153,7 +153,7 @@ base::IEnumerable<base::ReadOnlySpan> const &bsp::EthernetController::ReceiveMul
 
         if (HAL_ETH_GetRxDataBuffer(&_handle, rx_buffers) != HAL_OK)
         {
-            DI_Console().WriteLine("HAL_ETH_GetRxDataBuffer 接收数据发生错误。");
+            bsp::di::Console().WriteLine("HAL_ETH_GetRxDataBuffer 接收数据发生错误。");
             continue;
         }
 
@@ -401,7 +401,7 @@ base::ReadOnlySpan bsp::EthernetController::Receive()
 
         if (HAL_ETH_GetRxDataBuffer(&_handle, rx_buffers) != HAL_OK)
         {
-            DI_Console().WriteLine("HAL_ETH_GetRxDataBuffer 接收数据发生错误。");
+            bsp::di::Console().WriteLine("HAL_ETH_GetRxDataBuffer 接收数据发生错误。");
             continue;
         }
 
@@ -430,7 +430,7 @@ base::ReadOnlySpan bsp::EthernetController::Receive()
 
         if (_received_span_list.Count() > 1)
         {
-            DI_Console().WriteLine("接收到的以太网帧使用了超过 1 个 DMA 描述符。");
+            bsp::di::Console().WriteLine("接收到的以太网帧使用了超过 1 个 DMA 描述符。");
         }
 
         if (_received_span_list.Count() == 0)
