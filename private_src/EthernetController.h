@@ -1,6 +1,7 @@
 #pragma once
 #include "base/container/List.h"
 #include "base/define.h"
+#include "base/task/IBinarySemaphore.h"
 #include "bsp-interface/di/task.h"
 #include "bsp-interface/ethernet/IEthernetController.h"
 #include "hal.h"
@@ -19,9 +20,9 @@ namespace bsp
 		base::Mac _mac;
 		ETH_TxPacketConfig _sending_config{};
 		base::List<ETH_BufferTypeDef> _eth_buffers{};
-		std::shared_ptr<bsp::IBinarySemaphore> _send_completion_signal = bsp::di::task::CreateBinarySemaphore();
+		std::shared_ptr<base::IBinarySemaphore> _send_completion_signal = base::CreateIBinarySemaphore(false);
 		base::List<base::ReadOnlySpan> _received_span_list{};
-		std::shared_ptr<bsp::IBinarySemaphore> _receiving_completion_signal = bsp::di::task::CreateBinarySemaphore();
+		std::shared_ptr<base::IBinarySemaphore> _receiving_completion_signal = base::CreateIBinarySemaphore(false);
 
 		/// @brief 接收。
 		/// @return
